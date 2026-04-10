@@ -4,7 +4,7 @@ public enum RoomMenuEnum {
     SHOW_ALL(1, "Показать все комнаты"),
     ADD(2, "Добавить комнату"),
     LOCK(3, "Запечатать комнату"),
-    EXIT(4, "Выход");
+    EXIT(0, "Выход");
 
     private int id;
     private String displayName;

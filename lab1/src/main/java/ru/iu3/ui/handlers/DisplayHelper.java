@@ -8,6 +8,7 @@ import ru.iu3.entity.interfaces.Room;
 import ru.iu3.service.interfaces.BookingService;
 import ru.iu3.service.interfaces.PassService;
 import ru.iu3.service.interfaces.RoomService;
+import ru.iu3.ui.constants.UiConstants;
 
 public class DisplayHelper {
     private PassService passService;
@@ -21,18 +22,18 @@ public class DisplayHelper {
     }
 
     public void showRooms() {
-        System.out.println("Cписок комнат:");
+        System.out.println(UiConstants.ROOMS_LIST_TITLE);
         List<Room> rooms = roomService.getAllRooms();
         if (rooms.isEmpty()) {
-            System.out.println("Список комнат пуст.");
+            System.out.println(UiConstants.ROOMS_EMPTY);
             return;
         }
 
-        System.out.println("ID | Тип | Название | Ставка (руб/час)");
+        System.out.println(UiConstants.ROOMS_HEADER);
         for (Room room : rooms) {
             if (room.getIsLocked()) {
                 System.out.println(room.getId() + " | " + room.getType().getDisplayName() + " | " + room.getName()
-                        + " | " + room.getHourlyRate() + " (Запечатана)");
+                        + " | " + room.getHourlyRate() + UiConstants.ROOM_LOCKED_SUFFIX);
                 continue;
             } else {
                 System.out.println(room.getId() + " | " + room.getType().getDisplayName() + " | " + room.getName()
@@ -42,28 +43,28 @@ public class DisplayHelper {
     }
 
     public void showPasses() {
-        System.out.println("Cписок пропусков:");
+        System.out.println(UiConstants.PASSES_LIST_TITLE);
         List<Pass> passes = passService.getAllPasses();
         if (passes.isEmpty()) {
-            System.out.println("Список пропусков пуст.");
+            System.out.println(UiConstants.PASSES_EMPTY);
             return;
         }
 
-        System.out.println("ID | Владелец | Активен");
+        System.out.println(UiConstants.PASSES_HEADER);
         for (Pass pass : passes) {
             System.out.println(pass.getId() + " | " + pass.getHolderName() + " | " + pass.isActive());
         }
     }
 
     public void showBookings() {
-        System.out.println("Список бронирований:");
+        System.out.println(UiConstants.BOOKINGS_LIST_TITLE);
         List<Booking> bookings = bookingService.getAllBookings();
         if (bookings.isEmpty()) {
-            System.out.println("Список бронирований пуст.");
+            System.out.println(UiConstants.BOOKINGS_EMPTY);
             return;
         }
 
-        System.out.println("ID | ID Комнаты | Время начала | Время окончания | ID Пропуска");
+        System.out.println(UiConstants.BOOKINGS_HEADER);
         for (Booking booking : bookings) {
             System.out.println(booking.getId() + " | " + booking.getRoomId() + " | "
                     + booking.getStartTime() + " | " + booking.getEndTime() + " | " + booking.getPassId());

@@ -8,9 +8,10 @@ import ru.iu3.entity.interfaces.Room;
 import ru.iu3.enums.PassMenuEnum;
 import ru.iu3.service.interfaces.BookingService;
 import ru.iu3.service.interfaces.PassService;
+import ru.iu3.ui.constants.UiConstants;
 
 public class PassesMenuHandler {
-    private static String ERROR_MSG = "Произошла ошибка: ";
+    private static String ERROR_MSG = UiConstants.ERROR_PREFIX;
 
     private Scanner scanner;
     private PassService passService;
@@ -31,7 +32,7 @@ public class PassesMenuHandler {
                 System.out.println(item.getId() + ". " + item.getDisplayName());
             }
             try {
-                System.out.print("Выберите пункт меню: ");
+                System.out.print(UiConstants.PROMPT_MESSAGE);
                 int choice = Integer.parseInt(scanner.nextLine());
                 PassMenuEnum selected = PassMenuEnum.findByKey(choice);
 
@@ -54,7 +55,7 @@ public class PassesMenuHandler {
                         inPassesMenu = false;
                         break;
                     default:
-                        System.out.println("Неверный выбор. Пожалуйста, попробуйте снова.");
+                        System.out.println(UiConstants.INVALID_CHOICE);
                 }
 
             } catch (Exception e) {
@@ -64,31 +65,31 @@ public class PassesMenuHandler {
     }
 
     public void issuePass() {
-        System.out.println("Введите ID пропуска:");
+        System.out.println(UiConstants.PROMPT_PASS_ID);
         int id = Integer.parseInt(scanner.nextLine());
-        System.out.println("Введите имя владельца пропуска:");
+        System.out.println(UiConstants.PROMPT_PASS_HOLDER);
         String holderName = scanner.nextLine();
         passService.issuePass(id, holderName);
     }
 
     public void deactivatePass() {
-        System.out.println("Введите ID пропуска для деактивации:");
+        System.out.println(UiConstants.PROMPT_PASS_DEACTIVATE);
         int id = Integer.parseInt(scanner.nextLine());
         passService.deactivatePass(id);
     }
 
     public void showAccess() {
-        System.out.println("Введите ID пропуска для просмотра доступа:");
+        System.out.println(UiConstants.PROMPT_PASS_ACCESS);
         int id = Integer.parseInt(scanner.nextLine());
         Pass pass = passService.getPassById(id);
         if (!pass.isActive()) {
-            System.out.println("Пропуск неактивен. Доступ к комнатам отсутствует.");
+            System.out.println(UiConstants.PASS_INACTIVE);
             return;
         }
 
         List<Room> rooms = bookingService.getRoomsForPass(pass.getId());
         for (Room room : rooms) {
-            System.out.println("Доступ к комнате: " + room.getName());
+            System.out.println(UiConstants.ROOM_ACCESS_PREFIX + room.getName());
         }
     }
 

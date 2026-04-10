@@ -5,9 +5,10 @@ import java.util.Scanner;
 import ru.iu3.enums.RoomEnum;
 import ru.iu3.enums.RoomMenuEnum;
 import ru.iu3.service.interfaces.RoomService;
+import ru.iu3.ui.constants.UiConstants;
 
 public class RoomsMenuHandler {
-    private static String ERROR_MSG = "Произошла ошибка: ";
+    private static String ERROR_MSG = UiConstants.ERROR_PREFIX;
 
     private Scanner scanner;
     private RoomService roomService;
@@ -19,7 +20,6 @@ public class RoomsMenuHandler {
         this.displayHelper = displayHelper;
     }
 
-    // Пул констант (coool!) Перенести все строковые константы (выводы) в interface!
     public void run() {
         boolean inRoomsMenu = true;
         while (inRoomsMenu) {
@@ -27,7 +27,7 @@ public class RoomsMenuHandler {
                 System.out.println(item.getId() + ". " + item.getDisplayName());
             }
             try {
-                System.out.print("Выберите пункт меню: ");
+                System.out.print(UiConstants.PROMPT_MESSAGE);
                 int choice = Integer.parseInt(scanner.nextLine());
                 RoomMenuEnum selected = RoomMenuEnum.findByKey(choice);
 
@@ -46,7 +46,7 @@ public class RoomsMenuHandler {
                         inRoomsMenu = false;
                         break;
                     default:
-                        System.out.println("Неверный выбор. Пожалуйста, попробуйте снова.");
+                        System.out.println(UiConstants.INVALID_CHOICE);
                 }
 
             } catch (Exception e) {
@@ -56,24 +56,23 @@ public class RoomsMenuHandler {
     }
 
     public void lockRoom() {
-        
-        System.out.println("Введите ID комнаты для запечатывания:");
+        System.out.println(UiConstants.PROMPT_ROOM_LOCK);
         int id = Integer.parseInt(scanner.nextLine());
         roomService.lockRoom(id);
     }
 
     public void addRoom() {
-        System.out.println("Введите тип комнаты:");
+        System.out.println(UiConstants.PROMPT_ROOM_TYPE);
         for (RoomEnum type : RoomEnum.values()) {
             System.out.println(type.getId() + ". " + type.getDisplayName());
         }
         int typeId = Integer.parseInt(scanner.nextLine());
         RoomEnum type = RoomEnum.findByKey(typeId);
-        System.out.println("Введите ID комнаты:");
+        System.out.println(UiConstants.PROMPT_ROOM_ID);
         int id = Integer.parseInt(scanner.nextLine());
-        System.out.println("Введите название комнаты:");
+        System.out.println(UiConstants.PROMPT_ROOM_NAME);
         String name = scanner.nextLine();
-        System.out.println("Введите ставку аренды (руб/час):");
+        System.out.println(UiConstants.PROMPT_ROOM_RATE);
         int hourlyRate = Integer.parseInt(scanner.nextLine());
         roomService.addRoom(type, id, name, hourlyRate);
     }

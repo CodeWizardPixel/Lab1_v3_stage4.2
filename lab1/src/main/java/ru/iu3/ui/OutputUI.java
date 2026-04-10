@@ -1,11 +1,12 @@
 package ru.iu3.ui;
 
 import ru.iu3.enums.OptionsMenuEnum;
+import ru.iu3.ui.constants.UiConstants;
 
 public class OutputUI {
 
     public void showWelcome() {
-        System.out.println("--- Добро пожаловать в чудный консольный коворкинг! ---");
+        System.out.println(UiConstants.WELCOME_MESSAGE);
     }
 
     public void showOptions() {
@@ -15,7 +16,7 @@ public class OutputUI {
     }
 
     public void showPrompt() {
-        System.out.print("Выберите пункт меню: ");
+        System.out.print(UiConstants.PROMPT_MESSAGE);
     }
 
     public void showChoice(String choice) {
@@ -23,14 +24,14 @@ public class OutputUI {
     }
 
     public void showInvalidChoice() {
-        System.out.println("Неверный выбор. Пожалуйста, попробуйте снова.");
+        System.out.println(UiConstants.INVALID_CHOICE);
     }
 
     public void showGoodbye() {
-        System.out.println("Споки-ноки :3c ~");
+        System.out.println(UiConstants.GOODBYE_MESSAGE);
     }
 
     public void showError(String message) {
-        System.out.println("Произошла ошибка: " + message);
+        System.out.println(UiConstants.ERROR_PREFIX + message);
     }
 }
