@@ -1,22 +1,23 @@
 package ru.iu3.ui;
 
-import ru.iu3.enums.OptionsMenuEnum;
-import ru.iu3.ui.constants.UiConstants;
+import java.util.List;
+
+import ru.iu3.ui.interfaces.MenuItem;
 
 public class OutputUI {
 
     public void showWelcome() {
-        System.out.println(UiConstants.WELCOME_MESSAGE);
+        System.out.println("--- Добро пожаловать в чудный консольный коворкинг! ---");
     }
 
-    public void showOptions() {
-        for (OptionsMenuEnum option : OptionsMenuEnum.values()) {
-            System.out.println(option.getKey() + ". " + option.getLabel());
+    public void showOptions(List<MenuItem> items) {
+        for (MenuItem item : items) {
+            System.out.println(item.getKey() + ". " + item.getLabel());
         }
     }
 
     public void showPrompt() {
-        System.out.print(UiConstants.PROMPT_MESSAGE);
+        System.out.print("Выберите пункт меню: ");
     }
 
     public void showChoice(String choice) {
@@ -24,14 +25,14 @@ public class OutputUI {
     }
 
     public void showInvalidChoice() {
-        System.out.println(UiConstants.INVALID_CHOICE);
+        System.out.println("Неверный выбор. Пожалуйста, попробуйте снова.");
     }
 
     public void showGoodbye() {
-        System.out.println(UiConstants.GOODBYE_MESSAGE);
+        System.out.println("Споки-ноки :3c ~");
     }
 
     public void showError(String message) {
-        System.out.println(UiConstants.ERROR_PREFIX + message);
+        System.out.println("Произошла ошибка: " + message);
     }
 }
