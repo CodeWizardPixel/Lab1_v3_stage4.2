@@ -13,6 +13,7 @@ public final class UiConstants {
     public static final String MAIN_BOOKINGS = "Бронирования";
     public static final String MAIN_PASSES = "Пропуска";
     public static final String MAIN_GENERATE_DATA = "Сгенерировать тестовые данные";
+    public static final String MAIN_REPORTS = "Отчеты";
     public static final String MAIN_EXIT = "Выход";
 
     public static final String ROOMS_LIST_TITLE = "Cписок комнат:";
@@ -64,6 +65,20 @@ public final class UiConstants {
     public static final String BOOKING_CREATED = "Бронирование создано. Стоимость: ";
     public static final String BOOKING_CREATED_SUFFIX = " руб.";
     public static final String PROMPT_BOOKING_CANCEL = "Введите ID бронирования для отмены:";
+
+    public static final String REPORT_MENU_ACTIVE_BOOKINGS = "Активные бронирования";
+    public static final String REPORT_MENU_ROOMS_LOAD = "Загруженность комнат";
+    public static final String REPORT_MENU_PASSES = "Отчет по пропускам";
+    public static final String REPORT_MENU_BACK = "Назад";
+    public static final String REPORT_ACTIVE_BOOKINGS_TITLE = "Активные бронирования:";
+    public static final String REPORT_ROOMS_LOAD_TITLE = "Загруженность комнат:";
+    public static final String REPORT_PASSES_TITLE = "Отчет по пропускам:";
+    public static final String REPORT_NO_ACTIVE_BOOKINGS = "Нет активных бронирований.";
+    public static final String REPORT_NO_PASSES = "Список пропусков пуст.";
+    public static final String REPORT_NO_ROOMS_FOR_PASS = "нет активных комнат";
+    public static final String REPORT_ACTIVE_BOOKING_ROW = "ID: %d, Комната: %d %s, Пропуск: %d, Владелец: %s, c %s по %s";
+    public static final String REPORT_ROOM_LOAD_ROW = "Комната %d %s: активных бронирований: %d, минут: %d, часов: %.2f, примерная выручка: %.2f руб.";
+    public static final String REPORT_PASS_ROW = "Пропуск %d, владелец: %s, активен: %s, активных бронирований: %d, комнаты: %s";
 
     public static final String TEST_DATA_SUCCESS = "Тестовые данные успешно созданы.";
 }

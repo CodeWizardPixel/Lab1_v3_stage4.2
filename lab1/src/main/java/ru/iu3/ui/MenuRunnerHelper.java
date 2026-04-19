@@ -5,7 +5,7 @@ import java.util.List;
 import ru.iu3.ui.constants.UiConstants;
 import ru.iu3.ui.interfaces.MenuItem;
 
-public class OutputUI {
+public class MenuRunnerHelper {
 
     public void showWelcome() {
         System.out.println(UiConstants.WELCOME_MESSAGE);

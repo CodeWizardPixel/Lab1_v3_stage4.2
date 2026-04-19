@@ -5,21 +5,29 @@ import java.util.Scanner;
 
 import ru.iu3.ui.interfaces.MenuItem;
 
-public class MainMenu {
+public class MenuRunner {
     private Scanner scanner;
-    private OutputUI display;
-    private  List<MenuItem> items;
+    private MenuRunnerHelper display;
+    private List<MenuItem> items;
+    private boolean showWelcome;
 
-    public MainMenu(Scanner scanner, OutputUI display, List<MenuItem> items) {
+    public MenuRunner(Scanner scanner, MenuRunnerHelper display, List<MenuItem> items) {
+        this(scanner, display, items, false);
+    }
+
+    public MenuRunner(Scanner scanner, MenuRunnerHelper display, List<MenuItem> items, boolean showWelcome) {
         this.scanner = scanner;
         this.display = display;
         this.items = items;
+        this.showWelcome = showWelcome;
     }
 
     public void run() {
         boolean running = true;
         while (running) {
-            display.showWelcome();
+            if (showWelcome) {
+                display.showWelcome();
+            }
             display.showOptions(items);
             try {
                 display.showPrompt();

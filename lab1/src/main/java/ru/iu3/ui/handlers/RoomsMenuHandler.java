@@ -7,14 +7,17 @@ import java.util.Scanner;
 import ru.iu3.entity.interfaces.Room;
 import ru.iu3.enums.RoomEnum;
 import ru.iu3.service.interfaces.RoomService;
-import ru.iu3.ui.constants.UiConstants;
+import ru.iu3.ui.MenuRunner;
+import ru.iu3.ui.MenuRunnerHelper;
 import ru.iu3.ui.interfaces.MenuItem;
+import ru.iu3.ui.constants.UiConstants;
 
 public class RoomsMenuHandler {
 
     private Scanner scanner;
     private RoomService roomService;
     private List<MenuItem> items = new ArrayList<>();
+    private MenuRunner menuRunner;
 
     public RoomsMenuHandler(Scanner scanner, RoomService roomService) {
         this.scanner = scanner;
@@ -24,27 +27,11 @@ public class RoomsMenuHandler {
         items.add(new AddMeetingRoomItem());
         items.add(new DeleteRoomItem());
         items.add(new BackItem());
+        this.menuRunner = new MenuRunner(scanner, new MenuRunnerHelper(), items);
     }
 
     public void run() {
-        boolean inRoomsMenu = true;
-        while (inRoomsMenu) {
-            for (MenuItem item : items) {
-                System.out.println(item.getKey() + ". " + item.getLabel());
-            }
-            try {
-                System.out.print(UiConstants.PROMPT_MENU);
-                int choice = Integer.parseInt(scanner.nextLine());
-                MenuItem selected = findItem(choice);
-                if (selected != null) {
-                    inRoomsMenu = selected.execute();
-                } else {
-                    System.out.println(UiConstants.INVALID_CHOICE);
-                }
-            } catch (Exception e) {
-                System.out.println(UiConstants.ERROR_PREFIX + e.getMessage());
-            }
-        }
+        menuRunner.run();
     }
 
     public void showRooms() {
@@ -66,15 +53,6 @@ public class RoomsMenuHandler {
             System.out.println(String.format(UiConstants.ROOM_ROW_FORMAT, room.getId(),
                     room.getType().getDisplayName(), room.getName(), room.getHourlyRate()));
         }
-    }
-
-    private MenuItem findItem(int key) {
-        for (MenuItem item : items) {
-            if (item.getKey() == key) {
-                return item;
-            }
-        }
-        return null;
     }
 
     private class ShowRoomsItem implements MenuItem {

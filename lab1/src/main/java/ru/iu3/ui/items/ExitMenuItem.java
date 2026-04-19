@@ -1,14 +1,14 @@
 package ru.iu3.ui.items;
 
-import ru.iu3.ui.OutputUI;
+import ru.iu3.ui.MenuRunnerHelper;
 import ru.iu3.ui.constants.UiConstants;
 import ru.iu3.ui.interfaces.MenuItem;
 
 public class ExitMenuItem implements MenuItem {
 
-    private OutputUI display;
+    private MenuRunnerHelper display;
 
-    public ExitMenuItem(OutputUI display) {
+    public ExitMenuItem(MenuRunnerHelper display) {
         this.display = display;
     }
 

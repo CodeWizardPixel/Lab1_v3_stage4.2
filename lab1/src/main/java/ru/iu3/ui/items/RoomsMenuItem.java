@@ -1,16 +1,16 @@
 package ru.iu3.ui.items;
 
-import ru.iu3.ui.OutputUI;
+import ru.iu3.ui.MenuRunnerHelper;
 import ru.iu3.ui.constants.UiConstants;
 import ru.iu3.ui.handlers.RoomsMenuHandler;
 import ru.iu3.ui.interfaces.MenuItem;
 
 public class RoomsMenuItem implements MenuItem {
 
-    private OutputUI display;
+    private MenuRunnerHelper display;
     private RoomsMenuHandler roomsMenuHandler;
 
-    public RoomsMenuItem(OutputUI display, RoomsMenuHandler roomsMenuHandler) {
+    public RoomsMenuItem(MenuRunnerHelper display, RoomsMenuHandler roomsMenuHandler) {
         this.display = display;
         this.roomsMenuHandler = roomsMenuHandler;
     }

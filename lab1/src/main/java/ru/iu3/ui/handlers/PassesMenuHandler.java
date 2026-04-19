@@ -8,6 +8,8 @@ import ru.iu3.entity.Pass;
 import ru.iu3.entity.interfaces.Room;
 import ru.iu3.service.interfaces.BookingService;
 import ru.iu3.service.interfaces.PassService;
+import ru.iu3.ui.MenuRunner;
+import ru.iu3.ui.MenuRunnerHelper;
 import ru.iu3.ui.constants.UiConstants;
 import ru.iu3.ui.interfaces.MenuItem;
 
@@ -17,6 +19,7 @@ public class PassesMenuHandler {
     private PassService passService;
     private BookingService bookingService;
     private List<MenuItem> items = new ArrayList<>();
+    private MenuRunner menuRunner;
 
     public PassesMenuHandler(Scanner scanner, PassService passService, BookingService bookingService) {
         this.scanner = scanner;
@@ -27,27 +30,11 @@ public class PassesMenuHandler {
         items.add(new DeactivatePassItem());
         items.add(new ShowRoomsForPassItem());
         items.add(new BackItem());
+        this.menuRunner = new MenuRunner(scanner, new MenuRunnerHelper(), items);
     }
 
     public void run() {
-        boolean inPassesMenu = true;
-        while (inPassesMenu) {
-            for (MenuItem item : items) {
-                System.out.println(item.getKey() + ". " + item.getLabel());
-            }
-            try {
-                System.out.print(UiConstants.PROMPT_MENU);
-                int choice = Integer.parseInt(scanner.nextLine());
-                MenuItem selected = findItem(choice);
-                if (selected != null) {
-                    inPassesMenu = selected.execute();
-                } else {
-                    System.out.println(UiConstants.INVALID_CHOICE);
-                }
-            } catch (Exception e) {
-                System.out.println(UiConstants.ERROR_PREFIX + e.getMessage());
-            }
-        }
+        menuRunner.run();
     }
 
     public void showPasses() {
@@ -56,15 +43,6 @@ public class PassesMenuHandler {
             System.out.println(String.format(UiConstants.PASS_LINE_FORMAT, pass.getId(), pass.getHolderName(),
                     pass.isActive()));
         }
-    }
-
-    private MenuItem findItem(int key) {
-        for (MenuItem item : items) {
-            if (item.getKey() == key) {
-                return item;
-            }
-        }
-        return null;
     }
 
     private class ShowPassesItem implements MenuItem {

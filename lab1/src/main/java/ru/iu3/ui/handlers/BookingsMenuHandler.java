@@ -9,6 +9,8 @@ import java.util.Scanner;
 
 import ru.iu3.entity.Booking;
 import ru.iu3.service.interfaces.BookingService;
+import ru.iu3.ui.MenuRunner;
+import ru.iu3.ui.MenuRunnerHelper;
 import ru.iu3.ui.constants.UiConstants;
 import ru.iu3.ui.interfaces.MenuItem;
 
@@ -19,6 +21,7 @@ public class BookingsMenuHandler {
     private RoomsMenuHandler roomsMenuHandler;
     private PassesMenuHandler passesMenuHandler;
     private List<MenuItem> items = new ArrayList<>();
+    private MenuRunner menuRunner;
 
     public BookingsMenuHandler(Scanner scanner, BookingService bookingService,
             RoomsMenuHandler roomsMenuHandler, PassesMenuHandler passesMenuHandler) {
@@ -30,27 +33,11 @@ public class BookingsMenuHandler {
         items.add(new AddBookingItem());
         items.add(new CancelBookingItem());
         items.add(new BackItem());
+        this.menuRunner = new MenuRunner(scanner, new MenuRunnerHelper(), items);
     }
 
     public void run() {
-        boolean inBookingsMenu = true;
-        while (inBookingsMenu) {
-            for (MenuItem item : items) {
-                System.out.println(item.getKey() + ". " + item.getLabel());
-            }
-            try {
-                System.out.print(UiConstants.PROMPT_MENU);
-                int choice = Integer.parseInt(scanner.nextLine());
-                MenuItem selected = findItem(choice);
-                if (selected != null) {
-                    inBookingsMenu = selected.execute();
-                } else {
-                    System.out.println(UiConstants.INVALID_CHOICE);
-                }
-            } catch (Exception e) {
-                System.out.println(UiConstants.ERROR_PREFIX + e.getMessage());
-            }
-        }
+        menuRunner.run();
     }
 
     public void showRooms() {
@@ -66,15 +53,6 @@ public class BookingsMenuHandler {
             System.out.println(String.format(UiConstants.BOOKING_LINE_FORMAT, booking.getId(), booking.getRoomId(),
                     booking.getStartTime(), booking.getEndTime(), booking.getPassId()));
         }
-    }
-
-    private MenuItem findItem(int key) {
-        for (MenuItem item : items) {
-            if (item.getKey() == key) {
-                return item;
-            }
-        }
-        return null;
     }
 
     private class ShowBookingsItem implements MenuItem {

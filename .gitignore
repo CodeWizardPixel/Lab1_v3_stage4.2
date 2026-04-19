@@ -1,1 +1,2 @@
-lab1/target/
+*.class
+/lab1/target/classes
