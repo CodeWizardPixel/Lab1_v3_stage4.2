@@ -4,6 +4,7 @@ import java.util.List;
 
 import ru.iu3.entity.Pass;
 import ru.iu3.exceptions.NotFoundExeption;
+import ru.iu3.exceptions.ValidationException;
 import ru.iu3.repository.interfaces.Repository;
 import ru.iu3.service.interfaces.PassService;
 import ru.iu3.validation.PassValidator;
@@ -36,6 +37,9 @@ public class PassServiceImpl implements PassService {
 
     @Override
     public Pass getPassById(int id) {
+        if (id <= 0) {
+            throw new ValidationException("ID пропуска должен быть положительным числом.");
+        }
         Pass pass = passRepository.getById(id);
         if (pass == null) {
             throw new NotFoundExeption("Пропуск с таким ID не найден.");

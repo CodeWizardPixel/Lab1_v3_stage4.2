@@ -2,9 +2,6 @@ syntax = "proto3";
 
 package ru.iu3.grpc;
 
-option java_multiple_files = true;
-option java_package = "ru.iu3.grpc";
-option java_outer_classname = "ReferenceProto";
 
 service ReferenceService {
   rpc AddRoom(AddRoomRequest) returns (EmptyResponse);
