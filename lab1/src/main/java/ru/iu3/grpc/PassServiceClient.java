@@ -14,12 +14,15 @@ import ru.iu3.exceptions.ConflictException;
 import ru.iu3.exceptions.NotFoundExeption;
 import ru.iu3.exceptions.ValidationException;
 import ru.iu3.service.interfaces.PassService;
+import ru.iu3.util.AppLogger;
 
 public class PassServiceClient implements PassService {
     private final ManagedChannel channel;
     private final ReferenceServiceGrpc.ReferenceServiceBlockingStub stub;
+    private final AppLogger logger;
 
-    public PassServiceClient(String host, int port) {
+    public PassServiceClient(String host, int port, AppLogger logger) {
+        this.logger = logger;
         this.channel = ManagedChannelBuilder.forAddress(host, port)
                 .usePlaintext()
                 .build();
@@ -28,37 +31,45 @@ public class PassServiceClient implements PassService {
 
     @Override
     public void issuePass(int id, String holderName) {
+        String traceId = newTraceId();
         try {
+            logger.log("CORE", traceId, "IssuePass id=" + id);
             stub.withDeadlineAfter(2, TimeUnit.SECONDS)
                     .issuePass(ReferenceContract.IssuePassRequest.newBuilder()
                             .setId(id)
                             .setHolderName(holderName)
-                            .setTraceId(newTraceId())
+                            .setTraceId(traceId)
                             .build());
         } catch (StatusRuntimeException e) {
+            logger.log("CORE", traceId, "IssuePass failed: " + safeDescription(e));
             throw mapGrpcException(e);
         }
     }
 
     @Override
     public void deactivatePass(int id) {
+        String traceId = newTraceId();
         try {
+            logger.log("CORE", traceId, "DeactivatePass id=" + id);
             stub.withDeadlineAfter(2, TimeUnit.SECONDS)
                     .deactivatePass(ReferenceContract.PassIdRequest.newBuilder()
                             .setId(id)
-                            .setTraceId(newTraceId())
+                            .setTraceId(traceId)
                             .build());
         } catch (StatusRuntimeException e) {
+            logger.log("CORE", traceId, "DeactivatePass failed: " + safeDescription(e));
             throw mapGrpcException(e);
         }
     }
 
     @Override
     public List<Pass> getAllPasses() {
+        String traceId = newTraceId();
         try {
+            logger.log("CORE", traceId, "ListPasses");
             ReferenceContract.PassListResponse response = stub.withDeadlineAfter(2, TimeUnit.SECONDS)
                     .listPasses(ReferenceContract.TraceRequest.newBuilder()
-                            .setTraceId(newTraceId())
+                            .setTraceId(traceId)
                             .build());
 
             List<Pass> passes = new ArrayList<>();
@@ -67,20 +78,24 @@ public class PassServiceClient implements PassService {
             }
             return passes;
         } catch (StatusRuntimeException e) {
+            logger.log("CORE", traceId, "ListPasses failed: " + safeDescription(e));
             throw mapGrpcException(e);
         }
     }
 
     @Override
     public Pass getPassById(int id) {
+        String traceId = newTraceId();
         try {
+            logger.log("CORE", traceId, "GetPass id=" + id);
             ReferenceContract.PassResponse response = stub.withDeadlineAfter(2, TimeUnit.SECONDS)
                     .getPass(ReferenceContract.PassIdRequest.newBuilder()
                             .setId(id)
-                            .setTraceId(newTraceId())
+                            .setTraceId(traceId)
                             .build());
             return mapPass(response);
         } catch (StatusRuntimeException e) {
+            logger.log("CORE", traceId, "GetPass failed: " + safeDescription(e));
             throw mapGrpcException(e);
         }
     }
@@ -109,5 +124,9 @@ public class PassServiceClient implements PassService {
 
     private String newTraceId() {
         return UUID.randomUUID().toString();
+    }
+
+    private String safeDescription(StatusRuntimeException e) {
+        return e.getStatus().getDescription() == null ? e.getStatus().getCode().name() : e.getStatus().getDescription();
     }
 }

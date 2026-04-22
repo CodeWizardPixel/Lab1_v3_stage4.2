@@ -14,17 +14,19 @@ import ru.iu3.enums.RoomEnum;
 import ru.iu3.exceptions.ConflictException;
 import ru.iu3.exceptions.NotFoundExeption;
 import ru.iu3.exceptions.ValidationException;
-import ru.iu3.service.DefaultRoomFactory;
 import ru.iu3.service.interfaces.RoomFactory;
 import ru.iu3.service.interfaces.RoomService;
+import ru.iu3.util.AppLogger;
 
 public class RoomServiceClient implements RoomService {
     private final ManagedChannel channel;
     private final ReferenceServiceGrpc.ReferenceServiceBlockingStub stub;
     private final RoomFactory roomFactory;
+    private final AppLogger logger;
 
-    public RoomServiceClient(String host, int port, RoomFactory roomFactory) {
+    public RoomServiceClient(String host, int port, RoomFactory roomFactory, AppLogger logger) {
         this.roomFactory = roomFactory;
+        this.logger = logger;
         this.channel = ManagedChannelBuilder.forAddress(host, port)
                 .usePlaintext()
                 .build();
@@ -33,26 +35,31 @@ public class RoomServiceClient implements RoomService {
 
     @Override
     public void addRoom(RoomEnum type, int id, String name, int hourlyRate) {
+        String traceId = newTraceId();
         try {
+            logger.log("CORE", traceId, "AddRoom id=" + id);
             stub.withDeadlineAfter(2, TimeUnit.SECONDS) // Не будем спорить с докой :3c
                     .addRoom(ReferenceContract.AddRoomRequest.newBuilder()
                             .setType(type.name())
                             .setId(id)
                             .setName(name)
                             .setHourlyRate(hourlyRate)
-                            .setTraceId(newTraceId())
+                            .setTraceId(traceId)
                             .build());
         } catch (StatusRuntimeException e) {
+            logger.log("CORE", traceId, "AddRoom failed: " + safeDescription(e));
             throw mapGrpcException(e);
         }
     }
 
     @Override
     public List<Room> getAllRooms() {
+        String traceId = newTraceId();
         try {
+            logger.log("CORE", traceId, "ListRooms");
             ReferenceContract.RoomListResponse response = stub.withDeadlineAfter(2, TimeUnit.SECONDS)
                     .listRooms(ReferenceContract.TraceRequest.newBuilder()
-                            .setTraceId(newTraceId())
+                            .setTraceId(traceId)
                             .build());
 
             List<Room> rooms = new ArrayList<>();
@@ -61,33 +68,40 @@ public class RoomServiceClient implements RoomService {
             }
             return rooms;
         } catch (StatusRuntimeException e) {
+            logger.log("CORE", traceId, "ListRooms failed: " + safeDescription(e));
             throw mapGrpcException(e);
         }
     }
 
     @Override
     public void lockRoom(int id) {
+        String traceId = newTraceId();
         try {
+            logger.log("CORE", traceId, "LockRoom id=" + id);
             stub.withDeadlineAfter(2, TimeUnit.SECONDS)
                     .lockRoom(ReferenceContract.RoomIdRequest.newBuilder()
                             .setId(id)
-                            .setTraceId(newTraceId())
+                            .setTraceId(traceId)
                             .build());
         } catch (StatusRuntimeException e) {
+            logger.log("CORE", traceId, "LockRoom failed: " + safeDescription(e));
             throw mapGrpcException(e);
         }
     }
 
     @Override
     public Room getRoomById(int id) {
+        String traceId = newTraceId();
         try {
+            logger.log("CORE", traceId, "GetRoom id=" + id);
             ReferenceContract.RoomResponse response = stub.withDeadlineAfter(2, TimeUnit.SECONDS)
                     .getRoom(ReferenceContract.RoomIdRequest.newBuilder()
                             .setId(id)
-                            .setTraceId(newTraceId())
+                            .setTraceId(traceId)
                             .build());
             return mapRoom(response);
         } catch (StatusRuntimeException e) {
+            logger.log("CORE", traceId, "GetRoom failed: " + safeDescription(e));
             throw mapGrpcException(e);
         }
     }
@@ -120,5 +134,9 @@ public class RoomServiceClient implements RoomService {
 
     private String newTraceId() {
         return UUID.randomUUID().toString();
+    }
+
+    private String safeDescription(StatusRuntimeException e) {
+        return e.getStatus().getDescription() == null ? e.getStatus().getCode().name() : e.getStatus().getDescription();
     }
 }

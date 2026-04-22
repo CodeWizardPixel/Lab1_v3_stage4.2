@@ -10,14 +10,17 @@ import ru.iu3.exceptions.NotFoundExeption;
 import ru.iu3.exceptions.ValidationException;
 import ru.iu3.service.interfaces.PassService;
 import ru.iu3.service.interfaces.RoomService;
+import ru.iu3.util.AppLogger;
 
 public class ReferenceService extends ReferenceServiceGrpc.ReferenceServiceImplBase {
     private final RoomService roomService;
     private final PassService passService;
+    private final AppLogger logger;
 
-    public ReferenceService(RoomService roomService, PassService passService) {
+    public ReferenceService(RoomService roomService, PassService passService, AppLogger logger) {
         this.roomService = roomService;
         this.passService = passService;
+        this.logger = logger;
     }
 
     @Override
@@ -161,6 +164,6 @@ public class ReferenceService extends ReferenceServiceGrpc.ReferenceServiceImplB
     }
 
     private void log(String traceId, String message) {
-        System.out.println("[ReferenceService] traceId=" + traceId + " " + message);
+        logger.log("REFERENCE", traceId, message);
     }
 }
