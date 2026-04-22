@@ -5,6 +5,8 @@ import java.util.Scanner;
 import ru.iu3.entity.Booking;
 import ru.iu3.entity.Pass;
 import ru.iu3.entity.interfaces.Room;
+import ru.iu3.grpc.PassServiceClient;
+import ru.iu3.grpc.RoomServiceClient;
 import ru.iu3.repository.LBookingRepositorylmpl;
 import ru.iu3.repository.LPassRepositoryImpl;
 import ru.iu3.repository.LRoomRepositoryImpl;
@@ -24,18 +26,22 @@ import ru.iu3.validation.PassValidator;
 import ru.iu3.validation.RoomValidator;
 
 public class CoreApp {
-
+    private static final int PORT = 50052;
     public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
-        Repository<Room, Integer> roomRepository = new LRoomRepositoryImpl();
-        Repository<Pass, Integer> passRepository = new LPassRepositoryImpl();
+        // Repository<Room, Integer> roomRepository = new LRoomRepositoryImpl();
+        // Repository<Pass, Integer> passRepository = new LPassRepositoryImpl();
         Repository<Booking, Integer> bookingRepository = new LBookingRepositorylmpl();
 
         RoomFactory roomFactory = new DefaultRoomFactory();
-        RoomValidator roomValidator = new RoomValidator(roomRepository);
-        RoomService roomService = new RoomServiceImpl(roomRepository, roomFactory, roomValidator);
-        PassValidator passValidator = new PassValidator(passRepository);
-        PassService passService = new PassServiceImpl(passRepository, passValidator);
+        // RoomValidator roomValidator = new RoomValidator(roomRepository);
+        // RoomService roomService = new RoomServiceImpl(roomRepository, roomFactory, roomValidator);
+        // PassValidator passValidator = new PassValidator(passRepository);
+        // PassService passService = new PassServiceImpl(passRepository, passValidator);
+
+        RoomService roomService = new RoomServiceClient("localhost", PORT, roomFactory);
+        PassService passService = new PassServiceClient("localhost", PORT);
+
         BookingValidator bookingValidator = new BookingValidator();
         BookingService bookingService = new BookingServiceImpl(roomService, passService, bookingRepository,
                 bookingValidator, new GreedyStrategy());
